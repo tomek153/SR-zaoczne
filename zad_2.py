@@ -18,19 +18,20 @@ def load_triples():
 
 
 def generate_dgl_graph(df):
+    # https://docs.dgl.ai/en/latest/generated/dgl.heterograph.html  = dokumentacja DGL Heterograph
     column_names = df.columns.values.tolist()
     # Destination list unique
-    x = df[column_names[0]].unique().tolist()
+    destination = df[column_names[0]].unique().tolist()
     # Source list unique
-    y = df[column_names[-1]].unique().tolist()
+    source = df[column_names[-1]].unique().tolist()
     # Predicate list unique
-    z = df[column_names[-2]].unique().tolist()
+    predicate = df[column_names[-2]].unique().tolist()
 
-    xyz = set(x + y)
+    destsource= set(destination + source)
 
-    df1 = pd.DataFrame((xyz), columns=['name'])
+    dfDestSource = pd.DataFrame(destsource, columns=['name'])
 
-    categories = df1['name']
+    categories = dfDestSource['name']
     cat_type = pd.CategoricalDtype(categories=categories, ordered=True)
 
     df[column_names[0]] = df[column_names[0]].astype(cat_type)
@@ -38,21 +39,25 @@ def generate_dgl_graph(df):
     df['source_code'] = df[column_names[0]].cat.codes
     df['destination_code'] = df[column_names[-1]].cat.codes
     dataDict = {}
-    for pred in z:
+    for pred in predicate:
         relations = []
         src_list = df[df[column_names[-2]] == pred].source_code.tolist()
         dest_list = df[df[column_names[-2]] == pred].destination_code.tolist()
         relations.append(list(zip(src_list, dest_list)))
         for rel in relations:
-            dataDict[('<' + column_names[0] + '>', '<' + pred + '>', '<' + column_names[-1] + '>')] =  rel
+            dataDict[('<' + column_names[0] + '>', '<' + pred + '>', '<' + column_names[-1] + '>')] = rel
 
     graph = dgl.heterograph(dataDict)
     return graph
 
 
 if __name__ == '__main__':
+    # start time measure
     start = time.time()
+    # load data from RDF
     df = load_triples()
+    # Generate DGL Heterograph
+
     g = generate_dgl_graph(df)
     print(g)
     num_edges = {}
@@ -62,16 +67,13 @@ if __name__ == '__main__':
 
     # print('Liczba krawedzi'+str(num_edges))
     print("---------------------------------------")
-    print("rodzaje wierzcholkow grafu")
+    print("Rodzaje wierzcholkow grafu")
     print(g.ntypes)  # rodzaje wierzcholkow grafu
     print("---------------------------------------")
-    print("rodzaje krawedzi grafu")
+    print("Rodzaje krawedzi grafu")
     print(g.etypes)  # rodzaje krawedzi grafu
     print("---------------------------------------")
-    # print(g.metagraph)
-    # nx.draw(g.to_networkx())
-    # gh = dgl.to_homogeneous(g)
-    # print(dgl.DGLHeteroGraph.is_multihraph(g))
-    print(g.ndata)
+
+    # nx.draw(g.to_homogeneous().to_networkx())
     # nx.draw(gh, with_labels=True)
-    # print("Time: " + str(time.time() - start))
+    print("Time: " + str(time.time() - start))
