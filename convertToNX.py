@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from relations import *
 
 path = "data-dev/"
-file = "CSD_0D5142F537DA673DF1EA07F667340E3D.csv"
+file = "CSD_48D496922CDF10DE06AC91967B5C7F9C.csv"
 
 
 def mappedRelation(_df):
@@ -18,17 +18,14 @@ def mappedRelation(_df):
 
 
 def showKawai(_df):
+    print("Graph generation started...")
     G = nx.MultiGraph()
-    print('1')  # for debug
     rel = mappedRelation(_df)
-    print('2')  # for debug
     G.add_edges_from(rel)
-    print('3')  # for debug
     pos = nx.kamada_kawai_layout(G)
-    print('4')  # for debug
     nx.draw_kamada_kawai(G, edge_color='grey')
     nx.draw_networkx_labels(G, pos)
-    print('5')  # for debug
+    print("Graph generated.")
     plt.show()
 
 

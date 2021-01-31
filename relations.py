@@ -3,7 +3,7 @@ import csv
 from convertToDF import ConvertToDF
 
 path = "data-splitted/"
-file = "CSD_8C8BBC051B051F9424483D0ADEFAB81B.csv"
+file = "CSD_48D496922CDF10DE06AC91967B5C7F9C.csv"
 
 __all__ = ["relationHasProductPrice", "relationHasAge", "relationHasGender", "relationHasBrand", "relationHasCountry", "relationHasTitle"]
 
