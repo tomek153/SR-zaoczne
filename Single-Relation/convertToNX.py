@@ -15,7 +15,7 @@ def mappedRelation(_df):
     return relationList
 
 
-def showKawai(_df):
+def showKamadaKawai(_df):
     print("Graph generation started...")
     G = nx.MultiGraph()
     relation = mappedRelation(_df)
@@ -45,5 +45,5 @@ def showMultipartite(_df):
 if __name__ == '__main__':
     dfHasProductPrice = relationHasProductPrice(path, file)
     ## DELETE ANY COMMENT BELOW TO SHOW GRAPH
-    # showKawai(dfHasProductPrice)
+    showKamadaKawai(dfHasProductPrice)
     # showMultipartite(dfHasProductPrice)
