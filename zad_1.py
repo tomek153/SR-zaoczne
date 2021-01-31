@@ -1,13 +1,15 @@
 import pandas as pd
 import time
+import glob
 
 columns = ["product_id", "product_price", "product_age_group", "product_gender", "product_brand", "product_category_1", "product_category_2", "product_category_3", "product_category_4", "product_category_5", "product_category_6", "product_category_7", "product_country", "product_title"]
 columns_final_to_change = ["product_id", "product_price", "product_age_group", "product_gender", "product_brand", "category", "product_country", "product_title"]
 category_columns = ["product_category_1", "product_category_2", "product_category_3", "product_category_4", "product_category_5", "product_category_6", "product_category_7"]
+files_input_number = 3
 
 
-def load_sets():
-    df_all = pd.read_csv('Sets/CSD_0C5663BE07C0228F28ECE1AA0BB59B25.csv', nrows=1000)
+def load_sets(name):
+    df_all = pd.read_csv('Sets/'+name)
     return df_all[columns]
 
 
@@ -59,41 +61,51 @@ def get_title_words_triples(df_title):
     return df.drop_duplicates()
 
 
-def get_triples():
-    df_data = load_sets()
+def get_triples(number):
+    files = glob.glob("Sets/*.csv")
+    file_index = 0
 
-    df_subcategory_triples = get_category_subclasses_triples_vector(df_data[category_columns])
-    df_title_words_triples = get_title_words_triples(df_data['product_title'])
+    if number > len(files):
+        number = len(files)
 
-    category_vector = get_category_from_categories_list(df_data[category_columns])
-    df_data["category"] = category_vector
+    while file_index < number:
+        file_name = files[file_index][5:len(files[file_index])]
 
-    df_final = df_data[columns_final_to_change]
-    df_final = df_final.rename(columns={'product_age_group': 'age', "product_gender": "gender", "product_brand": "brand", "product_country": "country", "product_title": "title"})
-    columns_final = df_final.columns
+        df_data = load_sets(file_name)
 
-    product_id = None
-    triple_vector = []
-    for index, row in df_final.iterrows():
-        for col in columns_final:
-            row_col = str(row[col])
-            if col == "product_id":
-                product_id = row_col
-            else:
-                if row_col != "-1" and row_col != "0.0" and row_col.lower() != "nan":
-                    triple_vector.append([product_id, 'has_'+col, row[col]])
+        df_subcategory_triples = get_category_subclasses_triples_vector(df_data[category_columns])
+        df_title_words_triples = get_title_words_triples(df_data['product_title'])
 
-    df = pd.DataFrame(triple_vector, columns=['Subject', 'Predicate', 'Object'])
-    df = df.drop_duplicates()
+        category_vector = get_category_from_categories_list(df_data[category_columns])
+        df_data["category"] = category_vector
 
-    df = df.append(df_subcategory_triples, ignore_index=True)
-    df = df.append(df_title_words_triples, ignore_index=True)
+        df_final = df_data[columns_final_to_change]
+        df_final = df_final.rename(columns={'product_age_group': 'age', "product_gender": "gender", "product_brand": "brand", "product_country": "country", "product_title": "title"})
+        columns_final = df_final.columns
 
-    df.to_csv('./Triples/CSD_0C5663BE07C0228F28ECE1AA0BB59B25.csv', index=False)
-    print(df)
+        product_id = None
+        triple_vector = []
+        for index, row in df_final.iterrows():
+            for col in columns_final:
+                row_col = str(row[col])
+                if col == "product_id":
+                    product_id = row_col
+                else:
+                    if row_col != "-1" and row_col != "0.0" and row_col.lower() != "nan":
+                        triple_vector.append([product_id, 'has_'+col, row[col]])
+
+        df = pd.DataFrame(triple_vector, columns=['Subject', 'Predicate', 'Object'])
+        df = df.drop_duplicates()
+
+        df = df.append(df_subcategory_triples, ignore_index=True)
+        df = df.append(df_title_words_triples, ignore_index=True)
+
+        df.to_csv('./Triples/'+file_name, index=False)
+        print(df)
+        file_index += 1
 
 
 if __name__ == '__main__':
     start = time.time()
-    get_triples()
+    get_triples(files_input_number)
     print("Time: "+str(time.time()-start))
