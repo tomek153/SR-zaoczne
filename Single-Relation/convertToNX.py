@@ -45,5 +45,5 @@ def showMultipartite(_df):
 if __name__ == '__main__':
     dfHasProductPrice = relationHasProductPrice(path, file)
     ## DELETE ANY COMMENT BELOW TO SHOW GRAPH
-    showKamadaKawai(dfHasProductPrice)
+    # showKamadaKawai(dfHasProductPrice)
     # showMultipartite(dfHasProductPrice)
