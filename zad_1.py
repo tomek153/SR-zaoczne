@@ -7,7 +7,7 @@ category_columns = ["product_category_1", "product_category_2", "product_categor
 
 
 def load_sets():
-    df_all = pd.read_csv('Sets/CSD_0C5663BE07C0228F28ECE1AA0BB59B25.csv')
+    df_all = pd.read_csv('Sets/CSD_0C5663BE07C0228F28ECE1AA0BB59B25.csv', nrows=1000)
     return df_all[columns]
 
 
