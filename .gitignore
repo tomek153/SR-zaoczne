@@ -1,0 +1,21 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/.idea
+.idea/vcs.xml
+.idea/vcs.xml
+.idea/SR-zaoczne.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/profiles_settings.xml
+Single-Relation/.idea/
+Single-Relation/__pycache__/convertToDF.cpython-38.pyc
+Single-Relation/__pycache__/relations.cpython-38.pyc
+.idea/vcs.xml
+.idea/SR-zaoczne.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/vcs.xml
